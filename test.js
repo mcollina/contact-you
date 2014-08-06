@@ -155,5 +155,28 @@ describe('contact-you', function() {
       })
   })
 
+  it('should validate the title', function(done) {
+    request
+      .post('/')
+      .send({ title: '', text: 'with some text', from: 'foo@foo.com' })
+      .set('Accept', 'application/json')
+      .expect(422, done)
+  })
+
+  it('should validate the text', function(done) {
+    request
+      .post('/')
+      .send({ title: 'aaa', from: 'foo@foo.com' })
+      .set('Accept', 'application/json')
+      .expect(422, done)
+  })
+
+  it('should validate the email', function(done) {
+    request
+      .post('/')
+      .send({ title: 'aaa', text: 'bbb', from: 'foo' })
+      .set('Accept', 'application/json')
+      .expect(422, done)
+  })
 })
 

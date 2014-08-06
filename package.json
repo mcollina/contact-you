@@ -26,6 +26,7 @@
   "homepage": "https://github.com/mcollina/contact-you",
   "dependencies": {
     "callback-stream": "^1.0.2",
+    "joi": "^4.6.2",
     "nodemailer": "^1.1.1"
   },
   "devDependencies": {
