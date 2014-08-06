@@ -18,7 +18,8 @@ function contactYou(opts) {
       })
 
   function sentEmail(req, res) {
-    req.pipe(callbackStream(function(end, chunks) {
+    req.pipe(callbackStream(function(err, chunks) {
+
       var data
       try {
         data = JSON.parse(Buffer.concat(chunks))
