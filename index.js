@@ -17,21 +17,35 @@ function contactYou(opts) {
         , from: Joi.string().email()
       })
 
-  function sentEmail(req, res) {
+  function sentEmail(req, res, next) {
+    if (req.method != 'POST') {
+      if (next)
+        return next()
+
+      res.statusCode = 404
+      res.end()
+    }
+
+    if (!next)
+      next = function(err) {
+        res.statusCode = err.status || 500
+        res.end()
+      }
+
     req.pipe(callbackStream(function(err, chunks) {
 
       var data
       try {
         data = JSON.parse(Buffer.concat(chunks))
       } catch(err) {
-        res.statusCode = 406 // not acceptable
-        return res.end()
+        err.status = 406 // not acceptable
+        return next(err)
       }
 
       Joi.validate(data, schema, function(err, data) {
         if (err) {
-          res.statusCode = 422 // unprocessable entity
-          return res.end()
+          err.status = 422 // unprocessable entity
+          return next(err)
         }
 
         transport.sendMail({
@@ -43,9 +57,9 @@ function contactYou(opts) {
           , text: 'Email sent on behalf of: ' + data.from + '\n\n\n' + data.text
         }, function(err) {
           if (err)
-            res.statusCode = 500
-          else
-            res.statusCode = 200
+            return next(err)
+
+          res.statusCode = 200
           res.end()
         })
       })
