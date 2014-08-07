@@ -12,7 +12,7 @@ function contactYou(opts) {
 
   var transport = opts.transport
     , schema = Joi.object().keys({
-          title: Joi.string().required()
+          subject: Joi.string().required()
         , text: Joi.string().required()
         , from: Joi.string().email()
       })
@@ -50,7 +50,7 @@ function contactYou(opts) {
 
         transport.sendMail({
             to: opts.to
-          , title: data.title
+          , subject: data.subject
           , from: opts.from
           , replyTo: data.from
           , cc: data.from

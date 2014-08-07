@@ -50,7 +50,7 @@ describe('contact-you', function() {
     it('should return a 200', function(done) {
       request
         .post(route)
-        .send({ title: 'this is an email', text: 'with some text', from: 'foo@foo.com' })
+        .send({ subject: 'this is an email', text: 'with some text', from: 'foo@foo.com' })
         .set('Accept', 'application/json')
         .expect(200, done)
     })
@@ -59,7 +59,7 @@ describe('contact-you', function() {
       fake.nextIsSent = false
       request
         .post(route)
-        .send({ title: 'this is an email', text: 'with some text', from: 'foo@foo.com' })
+        .send({ subject: 'this is an email', text: 'with some text', from: 'foo@foo.com' })
         .set('Accept', 'application/json')
         .expect(500, done)
     })
@@ -67,7 +67,7 @@ describe('contact-you', function() {
     it('should actually send an email', function(done) {
       request
         .post(route)
-        .send({ title: 'this is an email', text: 'with some text', from: 'foo@foo.com' })
+        .send({ subject: 'this is an email', text: 'with some text', from: 'foo@foo.com' })
         .set('Accept', 'application/json')
         .expect(200, function() {
           expect(fake.lastMail).to.exist()
@@ -75,24 +75,24 @@ describe('contact-you', function() {
         })
     })
 
-    it('should send an email with the right title', function(done) {
+    it('should send an email with the right subject', function(done) {
       request
         .post(route)
-        .send({ title: 'this is an email', text: 'with some text', from: 'foo@foo.com' })
+        .send({ subject: 'this is an email', text: 'with some text', from: 'foo@foo.com' })
         .set('Accept', 'application/json')
         .expect(200, function() {
-          expect(fake.lastMail.data.title).to.eql('this is an email')
+          expect(fake.lastMail.data.subject).to.eql('this is an email')
           done()
         })
     })
 
-    it('should send an email with the right title (bis)', function(done) {
+    it('should send an email with the right subject (bis)', function(done) {
       request
         .post(route)
-        .send({ title: 'another email', text: 'with some text', from: 'foo@foo.com' })
+        .send({ subject: 'another email', text: 'with some text', from: 'foo@foo.com' })
         .set('Accept', 'application/json')
         .expect(200, function() {
-          expect(fake.lastMail.data.title).to.eql('another email')
+          expect(fake.lastMail.data.subject).to.eql('another email')
           done()
         })
     })
@@ -100,7 +100,7 @@ describe('contact-you', function() {
     it('should send an email with the right text', function(done) {
       request
         .post(route)
-        .send({ title: 'this is an email', text: 'with some text', from: 'foo@foo.com' })
+        .send({ subject: 'this is an email', text: 'with some text', from: 'foo@foo.com' })
         .set('Accept', 'application/json')
         .expect(200, function() {
           expect(fake.lastMail.data.text).to.eql('Email sent on behalf of: foo@foo.com\n\n\nwith some text')
@@ -111,7 +111,7 @@ describe('contact-you', function() {
     it('should send an email with the right text (bis)', function(done) {
       request
         .post(route)
-        .send({ title: 'this is an email', text: 'other text', from: 'foo@foo.com' })
+        .send({ subject: 'this is an email', text: 'other text', from: 'foo@foo.com' })
         .set('Accept', 'application/json')
         .expect(200, function() {
           expect(fake.lastMail.data.text).to.eql('Email sent on behalf of: foo@foo.com\n\n\nother text')
@@ -122,7 +122,7 @@ describe('contact-you', function() {
     it('should send an email from the from address specified in the constructor', function(done) {
       request
         .post(route)
-        .send({ title: 'this is an email', text: 'with some text', from: 'foo@foo.com' })
+        .send({ subject: 'this is an email', text: 'with some text', from: 'foo@foo.com' })
         .set('Accept', 'application/json')
         .expect(200, function() {
           expect(fake.lastMail.data.from).to.eql('original@foo.com')
@@ -133,7 +133,7 @@ describe('contact-you', function() {
     it('should send an email to the to address specified in the constructor', function(done) {
       request
         .post(route)
-        .send({ title: 'this is an email', text: 'with some text', from: 'foo@foo.com' })
+        .send({ subject: 'this is an email', text: 'with some text', from: 'foo@foo.com' })
         .set('Accept', 'application/json')
         .expect(200, function() {
           expect(fake.lastMail.data.to).to.eql('dest@collina.me')
@@ -144,7 +144,7 @@ describe('contact-you', function() {
     it('should include the from address in the payload as replyTo', function(done) {
       request
         .post(route)
-        .send({ title: 'this is an email', text: 'with some text', from: 'foo@foo.com' })
+        .send({ subject: 'this is an email', text: 'with some text', from: 'foo@foo.com' })
         .set('Accept', 'application/json')
         .expect(200, function() {
           expect(fake.lastMail.data.replyTo).to.eql('foo@foo.com')
@@ -155,7 +155,7 @@ describe('contact-you', function() {
     it('should include the from address in the payload as CC', function(done) {
       request
         .post(route)
-        .send({ title: 'this is an email', text: 'with some text', from: 'foo@foo.com' })
+        .send({ subject: 'this is an email', text: 'with some text', from: 'foo@foo.com' })
         .set('Accept', 'application/json')
         .expect(200, function() {
           expect(fake.lastMail.data.cc).to.eql('foo@foo.com')
@@ -163,10 +163,10 @@ describe('contact-you', function() {
         })
     })
 
-    it('should validate the title', function(done) {
+    it('should validate the subject', function(done) {
       request
         .post(route)
-        .send({ title: '', text: 'with some text', from: 'foo@foo.com' })
+        .send({ subject: '', text: 'with some text', from: 'foo@foo.com' })
         .set('Accept', 'application/json')
         .expect(422, done)
     })
@@ -174,7 +174,7 @@ describe('contact-you', function() {
     it('should validate the text', function(done) {
       request
         .post(route)
-        .send({ title: 'aaa', from: 'foo@foo.com' })
+        .send({ subject: 'aaa', from: 'foo@foo.com' })
         .set('Accept', 'application/json')
         .expect(422, done)
     })
@@ -182,7 +182,7 @@ describe('contact-you', function() {
     it('should validate the email', function(done) {
       request
         .post(route)
-        .send({ title: 'aaa', text: 'bbb', from: 'foo' })
+        .send({ subject: 'aaa', text: 'bbb', from: 'foo' })
         .set('Accept', 'application/json')
         .expect(422, done)
     })
