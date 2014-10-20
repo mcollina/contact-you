@@ -54,7 +54,7 @@ function contactYou(opts) {
           , from: opts.from
           , replyTo: data.from
           , cc: data.from
-          , text: 'Email sent on behalf of: ' + data.from + '\n\n\n' + data.text
+          , text: (opts.text || textBuilder)(data)
         }, function(err) {
           if (err)
             return next(err)
@@ -67,6 +67,10 @@ function contactYou(opts) {
   }
 
   return sentEmail
+}
+
+function textBuilder(data) {
+  return 'Email sent on behalf of: ' + data.from + '\n\n\n' + data.text
 }
 
 module.exports = contactYou

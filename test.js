@@ -194,6 +194,28 @@ describe('contact-you', function() {
     })
 
     buildTests()
+
+    it('should send an email with customized text', function(done) {
+
+      var request = supertest(http.createServer(contactYou({
+          transport: mailer.createTransport(fake)
+        , from: 'original@foo.com'
+        , to: 'dest@collina.me'
+        , text: function(data) {
+            return "Email inviata per conto di: " + data.from + '\n\n\n' + data.text
+          }
+      })))
+
+      request
+        .post('/')
+        .send({ subject: 'this is an email', text: 'with some text', from: 'foo@foo.com' })
+        .set('Accept', 'application/json')
+        .expect(200, function(err) {
+          expect(err).to.be.null();
+          expect(fake.lastMail.data.text).to.eql('Email inviata per conto di: foo@foo.com\n\n\nwith some text')
+          done()
+        })
+    })
   })
 
   describe('in a connect server', function() {
