@@ -1,6 +1,6 @@
 {
   "name": "contact-you",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "HTTP API for contacting you via e-mail as a node.js module!",
   "main": "index.js",
   "scripts": {
