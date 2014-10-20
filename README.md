@@ -24,6 +24,9 @@ var mailer = require('nodemailer')
         transport: transport
       , from: 'auto@matteocollina.com'
       , to: 'hello@matteocollina.com'
+      , text: null
+        // or you can pass a function that accepts the data object
+        // and returns a string
     }))
   , port = 3000
 
